@@ -40,7 +40,7 @@ public class Customer {
     @Override
     public String toString() {
         return """
-                name: %s
+                Account name: %s
                 email Address: %s
                 phone: %s
                 gender: %s

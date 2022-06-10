@@ -1,27 +1,33 @@
 package FinApp;
 
-import java.nio.channels.IllegalBlockingModeException;
+import java.math.BigDecimal;
 import java.util.Objects;
 
 public class Account {
 
-    public Account(String name, String pin) {
-        this.name = name;
-        this.pin = pin;
-        accountNumber = ++uid;
-        accountType = String.valueOf(accountTypes.SAVINGS);
-    }
+    protected static int uid = 1000;
+    protected int accountNumber;
+    protected String pin;
+    private final String email;
+    private BigDecimal balance;
+    private final String accountName;
+    private String accountType;
 
-    public Account(Customer customer,String pin) {
+    public Account(String name,String email, String pin) {
+        this.email = email;
         this.pin = pin;
-        this.name =customer.getName();
-        accountNumber = ++uid;
+        accountNumber += ++uid;
+        this.accountName = name;
         accountType = String.valueOf(accountTypes.SAVINGS);
-
+        balance = new BigDecimal(0);
     }
 
     public static void resetAccountNumber() {
         uid = 1000;
+    }
+
+    public String getEmail() {
+        return email;
     }
 
     public String getAccountType() {
@@ -34,65 +40,54 @@ public class Account {
         } else accountType = String.valueOf(accountTypes.SAVINGS);
     }
 
-    public int getAccountNumber(String pinNim) {
-        int number = 0;
-        if (Objects.equals(pin, pinNim)) {
-            number = accountNumber;
-        }
-        return number;
+    public int getAccountNumber() {
+        return accountNumber;
     }
 
     public String getAccountName() {
-        return name;
+        return accountName;
     }
 
     public void deposit(int amount) {
+        BigDecimal bigDecimal = new BigDecimal(amount);
         if (amount < 0) {
             throw new IllegalArgumentException("negative amount not accepted");
         }
-        balance += amount;
+        System.out.println("deposit successful");
+        System.out.println();
+        balance = balance.add(bigDecimal);
     }
 
-    public double getBalance(String pin) {
-
+    public BigDecimal getBalance(String pin) {
         if (!Objects.equals(this.pin, pin)) {
-           throw new IllegalArgumentException("wrong pin");
+            throw new IllegalArgumentException("wrong pin");
         }
         return balance;
     }
 
     public void withdraw(String pin, int amount) {
-
-
-
+        BigDecimal BigD_Amount = new BigDecimal(amount);
         if (!Objects.equals(this.pin, pin)) {
             throw new IllegalArgumentException("Wrong pin");
         }
-        if (amount > balance) {
+        if (amount > Integer.parseInt(String.valueOf(balance))) {
             throw new IllegalArgumentException("invalid amount");
         }
-
-
-        balance -= amount;
+        balance = balance.subtract(BigD_Amount);
+    }
+    public boolean validatePin(String pin){
+        return this.pin.equalsIgnoreCase(pin);
     }
 
-    public void transfer(int receiverAccountNo, int amount, String pin) {
-        if (!Objects.equals(this.pin, pin)) {
-            throw new IllegalArgumentException("Wrong pin");
-        }
-        if (amount > balance) {
-            throw new IllegalArgumentException("invalid amount");
-        }
-        balance -=amount;
+    @Override
+    public String toString() {
+        return String.format("""
+                Account name: %s
+                Account num: %d
+                balance: %.2f
+                """,getAccountName(), getAccountNumber(), getBalance(pin)) ;
     }
-
-    private enum accountTypes {SAVINGS, CURRENT}
-    private static int uid = 1000;
-    protected int accountNumber;
-    protected String pin;
-    protected double balance;
-    private final String name;
-    private String accountType;
+    protected enum accountTypes {SAVINGS, CURRENT}
 
 
 }

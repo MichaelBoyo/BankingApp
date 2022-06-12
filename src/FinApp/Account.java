@@ -11,7 +11,7 @@ public class Account {
     protected static int uid = 1000;
     private List<TransactionHistory> transactionHistoryList = new ArrayList<>();
     protected int accountNumber;
-    private String pin;
+    private final String pin;
     private final String email;
     protected BigDecimal balance;
     private final String accountName;

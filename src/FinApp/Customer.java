@@ -3,10 +3,7 @@ package FinApp;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.Period;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Scanner;
+import java.util.*;
 
 public class Customer {
     private final int year;
@@ -18,23 +15,34 @@ public class Customer {
     private final String email;
     private final String phoneNumber;
     private int age;
+
+    public Date getDateRegistered() {
+        return dateRegistered;
+    }
+
+    private final Date dateRegistered;
     private List<Account> accounts = new ArrayList<>();
 
-    public Customer(String firstName, String lastName, String email, String phoneNumber, int yearOfBirth, int monthOfBirth, int dayOFBirth, Gender gender) {
+    public Customer(String firstName, String lastName, String email,
+                    String phoneNumber, int yearOfBirth, int monthOfBirth, int dayOFBirth, Gender gender) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.year = yearOfBirth;
         this.month = monthOfBirth;
         this.day = dayOFBirth;
         this.gender = gender;
+        dateRegistered = new Date();
         if(!email.contains("@") || !email.contains(".")){
-            throw new IllegalArgumentException("enter valid email");
+            System.out.println("account not created");
+            throw new IllegalArgumentException("invalid email");
         }
         this.email = email;
         if(phoneNumber.length() < 11){
+            System.out.println("account not created");
             throw new IllegalArgumentException("invalid phone number");
         }
         this.phoneNumber = phoneNumber;
+
         setAge();
     }
 
@@ -97,11 +105,13 @@ public class Customer {
     public String toString() {
         return String.format("""
                 CUSTOMER DETAILS
-                Account name: %s
-                email Address: %s
-                phone: %s
-                gender: %s
-                """, getName(), getEmail(), getPhoneNumber(), getGender());
+                Date registered: %s
+                Customer name:   %s
+                email Address:   %s
+                phone:           %s
+                gender:          %s
+                age:             %d
+                """,getDateRegistered(), getName(), getEmail(), getPhoneNumber(), getGender(),getAge());
     }
 
     public String getGender() {
@@ -157,4 +167,7 @@ public class Customer {
     }
 
 
+    public String getFirstName() {
+        return firstName;
+    }
 }
